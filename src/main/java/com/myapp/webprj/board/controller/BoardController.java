@@ -4,6 +4,7 @@ import com.myapp.webprj.board.domain.Board;
 import com.myapp.webprj.board.service.BoardService;
 import com.myapp.webprj.common.Criteria;
 import com.myapp.webprj.common.PageMaker;
+import com.myapp.webprj.reply.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;

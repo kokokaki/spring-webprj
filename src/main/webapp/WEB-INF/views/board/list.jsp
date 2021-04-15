@@ -41,7 +41,7 @@
 
                             <td>
                                 <a class='move' href="/board/get${pageInfo.makeParam(pageInfo.cri.page)}&bno=${board.bno}">
-                                    ${board.title}
+                                    ${board.title} 
                                 </a>
                             </td>
 

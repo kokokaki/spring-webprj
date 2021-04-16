@@ -19,7 +19,9 @@ ADD CONSTRAINT fk_reply_free_board
 FOREIGN KEY (bno)
 REFERENCES tbl_free_board (bno);
 
-
+-- tbl_free_board 댓글 수 컬럼 추가
+ALTER TABLE tbl_free_board
+ADD reply_cnt NUMBER(10) DEFAULT 0;
 
 
 

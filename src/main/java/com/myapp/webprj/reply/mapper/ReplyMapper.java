@@ -36,4 +36,5 @@ public interface ReplyMapper {
     List<Reply> getList(
             @Param("bno") Long bno,
             @Param("cri") Criteria cri);
+
 }

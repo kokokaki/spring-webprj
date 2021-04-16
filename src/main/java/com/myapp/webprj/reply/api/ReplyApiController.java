@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Log4j2
@@ -23,13 +24,13 @@ public class ReplyApiController {
     //ResponseEntity : 클라이언트에 응답할때 단순 데이터만 넘기는게 아닌
     //                 각종 응답정보(상태코드, 응답헤더정보)를 함께 넘겨주는 객체
     @GetMapping("/{bno}/{page}")
-    public ResponseEntity<List<Reply>> getList(
+    public ResponseEntity<Map<String, Object>> getList(
             @PathVariable Long bno,
             @PathVariable int page) {
         log.info("/api/v1/replies/" + bno + "/" + page + " GET!!");
         Criteria cri = new Criteria(page, 10);
 
-        List<Reply> replies = replyService.getList(bno, cri);
+        Map<String, Object> replies = replyService.getList(bno, cri);
 
         return new ResponseEntity<>(replies, HttpStatus.OK);
     }

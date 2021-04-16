@@ -22,16 +22,16 @@ class ReplyMapperTest {
     @Test
     @DisplayName("게시물 번호에 해당하는 20개의 댓글이 정상적으로 삽입되어야 한다.")
     void replyInsertTest() {
-        for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= 400; i++) {
 
             Reply reply = new Reply();
-            reply.setBno(1L);
-            reply.setReply("1번게시물 댓글 no" + i);
+            reply.setBno(5L);
+            reply.setReply("5번게시물 댓글 no" + i);
             reply.setReplyer("테스터" + i);
 
             replyMapper.insert(reply);
         }
-        assertTrue(replyMapper.getCount(1L) == 20);
+        assertTrue(replyMapper.getCount(5L) == 400);
 
     }
 

@@ -33,6 +33,7 @@ public class BoardController {
 //        List<Board> list = boardService.getList(cri);
         List<Board> list = boardService.searchList(cri);
 
+
         model.addAttribute("list", list);
         model.addAttribute("pageInfo", new PageMaker(cri, boardService.getTotal(cri)));
         return "board/list";

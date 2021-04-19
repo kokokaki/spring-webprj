@@ -97,8 +97,8 @@
 
 
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- Reply Modal : 댓글 관련 모달 -->
+<div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -143,6 +143,9 @@
     //원본 글 번호
     let bno = '${board.bno}';
 
+    //현재 댓글 페이지 정보
+    let curPageNum = 1;
+
     //날짜 포맷 변환 함수
     function formatDate(datetime) {
         //문자열 날짜 데이터를 날짜객체로 변환
@@ -183,7 +186,7 @@
 
     //댓글 페이지 목록을 만들어주는 함수
     function showReplyPage(count) {
-        let pageNum = 1;
+        let pageNum = curPageNum;
         const $pageFooter = document.querySelector('.panel-footer');
 
         //한번에 보여줄 페이지 개수
@@ -217,7 +220,6 @@
             data += '  <li class="page-item"><a class="page-link" href="' + (endPage + 1) + '">다음</a></li>';
         }
         data += '</ul>';
-
         $pageFooter.innerHTML = data;
 
 
@@ -230,6 +232,7 @@
             //console.log("페이지 버튼 클릭됨: ", e.target.getAttribute('href'));
 
             curPageNum = e.target.getAttribute('href');
+
             showReplyList(curPageNum);
 
         });
@@ -266,6 +269,7 @@
 
     //댓글목록을 비동기로 불러오는 함수
     function showReplyList(page) {
+
         fetch('/api/v1/replies/' + bno + '/' + page)
             .then(res => res.json())
             .then(replyMap => {
@@ -275,7 +279,62 @@
             });
     }
 
-    let curPageNum = 1;
+    $(document).ready(function () {
+
+        const $modal = $('#replyModal');
+
+        //게시글 등록을 눌렀을 때 모달팝업을 띄우는 이벤트
+        document.getElementById('addReplyBtn').addEventListener('click', e => {
+
+            //$modal - 모달 전체 노드
+            // find() - 요소에서 자식노드를 모두 탐색하여 선택자에 맞는 요소를 가져옴
+            $modal.find('input').val('');
+            $modal.find('input[name=replyDate]').parent().hide();
+            $modal.find('button[id != modalRegisterBtn]').hide();
+            $modal.find('#modalCloseBtn').show();
+
+            $modal.modal('show');
+        });
+
+        //모달 close버튼 이벤트
+        $('#modalCloseBtn').on('click', e => {
+            $modal.modal('hide');
+        });
+
+        //게시물 등록 서버요청 비동기 처리 이벤트
+        $('#modalRegisterBtn').on('click', e => {
+
+            //서버로 전송할 데이터
+            const replyObj = {
+                bno: bno,
+                reply: $('input[name=reply]').val(),
+                replyer: $('input[name=replyer]').val()
+            };
+            console.log(replyObj);
+
+            const reqInfo = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(replyObj)
+            };
+            
+            fetch('/api/v1/replies/', reqInfo)
+                .then(res => res.text())
+                .then(msg => {
+                    if (msg === 'regSuccess') {
+                        $modal.modal('hide');
+                        $modal.find('input').val('');
+                        showReplyList(curPageNum);
+                    } else {
+                        alert('댓글 등록 실패!');
+                    }
+                });
+        });
+
+    }); //JQuery 영역
+
 
     (function () {
 

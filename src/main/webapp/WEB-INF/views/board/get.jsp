@@ -333,6 +333,81 @@
                 });
         });
 
+        //댓글 li를 눌렀을 때 댓글 상세보기 모달이 뜨는 이벤트
+        $('ul.chat').on('click', 'li', e => {
+            // console.log(e.currentTarget);
+
+            $modal.find('button[id=modalRegisterBtn]').hide();
+            $modal.find('button[id != modalRegisterBtn]').show();
+            $modal.find('input[name=replyDate]').parent().show();
+
+            //서버에 댓글 개별 조회 비동기 요청
+            const rno = e.currentTarget.dataset.rno;
+            // console.log(rno);
+            fetch('/api/v1/replies/' + rno)
+                .then(res => res.json())
+                .then(reply => {
+                    // console.log(reply);
+                    $('input[name=reply]').val(reply.reply);
+                    $('input[name=replyer]').val(reply.replyer);
+                    $('input[name=replyDate]').val(formatDate(reply.replyDate));
+                    $('input[name=replyDate]').attr('readonly', 'readonly');
+
+                    //모달에다가 rno를 붙여놓자
+                    $modal.data('rno', rno);
+                });
+
+            $modal.modal('show');
+        });
+
+        //댓글 수정 버튼 클릭 이벤트
+        $('#modalModBtn').on('click', e => {
+
+            const modDataObj = {
+                rno: $modal.data('rno'),
+                reply: $('input[name=reply]').val()
+            };
+            // console.log(modDataObj);
+
+            const reqInfo = {
+                method: 'PUT',
+                headers: {'content-type' : 'application/json'},
+                body: JSON.stringify(modDataObj)
+            };
+
+            fetch('/api/v1/replies/' + modDataObj.rno, reqInfo)
+                .then(res => res.text())
+                .then(msg => {
+                    if (msg === 'modSuccess') {
+                        $modal.modal('hide');
+                        showReplyList(curPageNum);
+                    } else {
+                        alert('수정 실패!');
+                    }
+                });
+        });
+
+        //댓글 수정 버튼 클릭 이벤트
+        $('#modalRemoveBtn').on('click', e => {
+            if (!confirm('정말로 댓글을 삭제합니까?')) {
+                return;
+            }
+            const reqInfo = {
+                method: 'DELETE'
+            };
+            fetch('/api/v1/replies/'+ bno + '/' + $modal.data('rno'), reqInfo)
+                .then(res => res.text())
+                .then(msg => {
+                    if (msg === 'delSuccess') {
+                        $modal.modal('hide');
+                        showReplyList(curPageNum);
+                    } else {
+                        alert('삭제 실패!');
+                    }
+                });
+        });
+
+
     }); //JQuery 영역
 
 

@@ -6,6 +6,7 @@ import com.myapp.webprj.reply.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +52,32 @@ public class ReplyApiController {
 
         return count == 1 ?
                 new ResponseEntity<>("regSuccess", HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    //댓글 수정
+    @RequestMapping(value = "/{rno}", method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<String> modify(
+            @PathVariable Long rno,
+            @RequestBody Reply reply) {
+
+        reply.setRno(rno);
+        log.info("/api/v1/replies/" + rno + " PUT: " + reply);
+
+        int modCount = replyService.modify(reply);
+        return modCount == 1
+                ? new ResponseEntity<>("modSuccess", HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    //댓글 삭제 요청 처리
+    @DeleteMapping("/{bno}/{rno}")
+    public ResponseEntity<String> remove(@PathVariable Long bno, @PathVariable Long rno) {
+
+        log.info("/api/v1/replies/" + bno + "/" + rno + " DELETE");
+
+        return replyService.remove(bno, rno) == 1
+                ? new ResponseEntity<>("delSuccess", HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

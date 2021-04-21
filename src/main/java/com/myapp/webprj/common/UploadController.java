@@ -1,5 +1,6 @@
 package com.myapp.webprj.common;
 
+import com.myapp.webprj.util.FileUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,14 +38,15 @@ public class UploadController {
 
             //세이브파일 객체 생성
             //생성자의 첫번째 파라미터로 저장경로를, 두번째 파라미터로 파일명을 넣어주세요
-            File saveFile = new File(uploadPath, file.getOriginalFilename());
-
-            try {
-                //서버에 파일을 저장하는 메서드
-                file.transferTo(saveFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            File saveFile = new File(uploadPath, file.getOriginalFilename());
+//
+//            try {
+//                //서버에 파일을 저장하는 메서드
+//                file.transferTo(saveFile);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            FileUtils.uploadFile(file, uploadPath);
 
         }
         return "";

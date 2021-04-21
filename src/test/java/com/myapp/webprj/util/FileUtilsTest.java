@@ -15,4 +15,10 @@ class FileUtilsTest {
         System.out.println("newFileName = " + newFileName);
     }
 
+    @Test
+    void makeNewUploadPathTest() {
+        String newUploadPath = FileUtils.getNewUploadPath("D:\\developing_hsg\\upload");
+        System.out.println("newUploadPath = " + newUploadPath);
+    }
+
 }

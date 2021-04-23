@@ -1,8 +1,11 @@
 package com.myapp.webprj.util;
 
+import org.imgscalr.Scalr;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -41,7 +44,7 @@ public class FileUtils {
      * @param uploadPath  - 서버의 업로드 루트 디렉토리 ex) D:/developing/upload
      * @return 완성된 파일저장 경로
      */
-    public static String uploadFile(MultipartFile file, String uploadPath) {
+    public static String uploadFile(MultipartFile file, String uploadPath) throws IOException {
 
         //중복이 없는 파일명으로 변경
         //ex) dog.jpg  =>  3dfshjfh334-dfdsfd43-qwecvx44-3442dd_dog.jpg
@@ -60,10 +63,45 @@ public class FileUtils {
             e.printStackTrace();
         }
 
+        //만약에 업로드한 파일이 이미지였다면?? 추가로 썸네일을 생성해서 저장하고
+        // 그 썸네일의 경로를 클라이언트에 응답
+        //이미지가 아니라면?? 그냥 파일 경로를 클라이언트에 응답
         String resFileName = newUploadPath.substring(uploadPath.length()) + File.separator + newFileName;
 
         //업로드에 성공하면 해당 파일의 루트패스를 제외한 전체 경로를 리턴
-        return resFileName.replace("\\", "/");
+        String ext = getFileExtension(newFileName);
+        if(getMediaType(ext) == null) { //이미지가 아니면
+            return resFileName.replace("\\", "/");
+        } else {
+            //이미지라면
+            String thumbnailFullPath = makeThumbnail(newUploadPath, newFileName);
+            return thumbnailFullPath
+                    .substring(uploadPath.length())
+                    .replace("\\", "/");
+        }
+    }
+
+    //썸네일 이미지를 생성하고 그 썸네일의 경로를 리턴하는 메서드
+    private static String makeThumbnail(String uploadDirPath, String fileName) throws IOException {
+        //원본 이미지 읽어오기
+        BufferedImage srcImg = ImageIO.read(new File(uploadDirPath, fileName));
+
+        //# 썸네일 작업
+        //1. 원본 이미지 리사이징
+        BufferedImage destImg
+                = Scalr.resize(srcImg, Scalr.Method.AUTOMATIC,
+                Scalr.Mode.FIT_TO_HEIGHT, 100);
+
+        //2. 썸네일 이미지를 저장할 경로 생성
+        String thumbnailName = uploadDirPath + File.separator + "s_" + fileName;
+
+        //3. 썸네일 이미지파일 객체 생성
+        File newFile = new File(thumbnailName);
+        //4. 썸네일 이미지 서버에 저장
+        ImageIO.write(destImg, getFileExtension(fileName), newFile);
+
+        //5. 썸네일 경로 리턴
+        return thumbnailName;
     }
 
     //날짜명으로 폴더 생성

@@ -77,14 +77,53 @@
                 $dropBox.css('border-color', 'gray').css('background', 'transparent');
             });
 
-            //드롭한 파일의 썸네일을 보여주는 함수
-            function showThumbnail(fileNameList) {
-                //fileName: \2021\04\22\dfhskdfjslfjdlsfsjk_dog.gif
-                for (let fileName of fileNameList) {
+
+            //이미지파일인지 확인하는 함수
+            function isImageFile(originFileName) {
+                //정규표현식
+                const pattern = /jpg$|gif$|png$/i;
+                return originFileName.match(pattern);
+            }
+
+            //확장자 판별 후 태그처리 함수
+            function checkExtType(fileName) {
+                //원본 파일명 추출
+                //fileName: /2021/04/23/~~~~~~~~~~.확장자
+                // dfslkdfsjlfjsdl_haha.docx  ->  haha.docx
+                let originFileName = fileName.substring(fileName.indexOf("_") + 1);
+
+                //이미지인지 확인
+                if(isImageFile(originFileName)) {
+                    originFileName = fileName.substring(fileName.indexOf("_") + 1);
+
                     const $img = document.createElement('img');
                     $img.classList.add('img-sizing');
                     $img.setAttribute('src', '/loadFile?fileName=' + fileName);
-                    $('.uploaded-list').append($img)
+                    $img.setAttribute('alt', originFileName);
+                    $('.uploaded-list').append($img);
+                } else {
+                    //이미지가 아니라면 다운로드 링크를 생성
+                    const $link = document.createElement('a');
+                    $link.setAttribute('href', '/loadFile?fileName=' + fileName);
+                    
+                    const $img = document.createElement('img');
+                    $img.classList.add('img-sizing');
+                    $img.setAttribute('src', '/img/file_icon.jpg');
+
+                    $link.appendChild($img);
+                    $link.innerHTML += '<span>' + originFileName + '</span>';
+                    $('.uploaded-list').append($link);
+                }
+            }
+
+            //드롭한 파일의 형식에 따라 태그를 보여주는 함수
+            function showFileData(fileNameList) {
+                //fileName: \2021\04\22\dfhskdfjslfjdlsfsjk_dog.gif
+                for (let fileName of fileNameList) {
+
+                    //이미지인지 이미지가 아닌지 구분하여 따로 처리
+                    checkExtType(fileName);
+                    
                 }
             }
 
@@ -121,8 +160,8 @@
                 fetch('/ajaxUpload', reqInfo)
                     .then(res => res.json())
                     .then(fileNameList => {
-                        //console.log(fileNameList);
-                        showThumbnail(fileNameList);
+                        console.log(fileNameList);
+                        showFileData(fileNameList);
                     });
  
             });

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class UploadController {
     //업로드된 파일을 처리
     //MultipartFile : 클라이언트가 전송한 파일데이터
     @PostMapping("/upload")
-    public String upload(@RequestParam("file") List<MultipartFile> fileList) {
+    public String upload(@RequestParam("file") List<MultipartFile> fileList) throws IOException {
 
 
         for (MultipartFile file : fileList) {
@@ -66,7 +67,7 @@ public class UploadController {
     // @ResponseBody를 메서드에 붙여주세요
     @PostMapping("/ajaxUpload")
     @ResponseBody
-    public ResponseEntity<String[]> ajaxUpload(List<MultipartFile> files) {
+    public ResponseEntity<String[]> ajaxUpload(List<MultipartFile> files) throws IOException {
 
         //업로드된 파일 수만큼 배열의 길이를 설정
         int len = (files == null) ? 0 : files.size();

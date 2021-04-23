@@ -35,6 +35,9 @@ dependencies {
 	//오라클 라이브러리 (11g edition - gradle, maven 라이센스 문제 공식 지원 불가)
 	compile fileTree(dir: '/src/main/webapp/WEB-INF/lib', include: ['*.jar'])
 
+	//파일업로드 라이브러리
+	implementation 'commons-io:commons-io:2.8.0'
+
 	//이미지 썸네일 라이브러리
 	implementation 'org.imgscalr:imgscalr-lib:4.2'
 

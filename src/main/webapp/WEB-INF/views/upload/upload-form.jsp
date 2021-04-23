@@ -22,6 +22,14 @@
             align-items: center;
             font-size: 1.5em;
         }
+        .uploaded-list {
+            display: flex;
+        }
+        .img-sizing {
+            display: block;
+            width: 100px;
+            height: 100px;
+        }
     </style>
 </head>
 <body>
@@ -69,6 +77,17 @@
                 $dropBox.css('border-color', 'gray').css('background', 'transparent');
             });
 
+            //드롭한 파일의 썸네일을 보여주는 함수
+            function showThumbnail(fileNameList) {
+                //fileName: \2021\04\22\dfhskdfjslfjdlsfsjk_dog.gif
+                for (let fileName of fileNameList) {
+                    const $img = document.createElement('img');
+                    $img.classList.add('img-sizing');
+                    $img.setAttribute('src', '/loadFile?fileName=' + fileName);
+                    $('.uploaded-list').append($img)
+                }
+            }
+
             //드롭 이벤트
             $dropBox.on('drop', e => {
                 e.preventDefault();
@@ -102,7 +121,8 @@
                 fetch('/ajaxUpload', reqInfo)
                     .then(res => res.json())
                     .then(fileNameList => {
-                        console.log(fileNameList);
+                        //console.log(fileNameList);
+                        showThumbnail(fileNameList);
                     });
  
             });

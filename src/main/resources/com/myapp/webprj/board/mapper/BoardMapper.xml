@@ -136,6 +136,14 @@
         VALUES (seq_free_board.nextval, #{title}, #{content}, #{writer})
     </insert>
 
+    <!--  파일 첨부 처리  -->
+    <insert id="addFile">
+        INSERT INTO file_upload
+         (file_name, bno)
+        VALUES (#{fileName}, SEQ_FREE_BOARD.currval)
+    </insert>
+
+
     <update id="update">
         UPDATE tbl_free_board
         SET

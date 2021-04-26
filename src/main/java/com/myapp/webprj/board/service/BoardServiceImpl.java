@@ -6,6 +6,7 @@ import com.myapp.webprj.common.Criteria;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,9 +16,19 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardMapper boardMapper;
 
+
+    @Transactional
     @Override
     public void register(Board board) {
         boardMapper.save(board);
+
+        //첨부파일이 있는 경우
+        List<String> fileNames = board.getFileNames();
+        if (fileNames != null) {
+            for (String fileName : fileNames) {
+                boardMapper.addFile(fileName);
+            }
+        }
     }
 
     @Override

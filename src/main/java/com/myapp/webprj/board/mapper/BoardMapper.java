@@ -3,6 +3,7 @@ package com.myapp.webprj.board.mapper;
 import com.myapp.webprj.board.domain.Board;
 import com.myapp.webprj.common.Criteria;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -31,6 +32,9 @@ public interface BoardMapper {
 
     //글 쓰기 기능
     void save(Board board);
+
+    //파일 첨부 기능
+    void addFile(String fileName);
 
     //글 수정 기능
     int update(Board board);

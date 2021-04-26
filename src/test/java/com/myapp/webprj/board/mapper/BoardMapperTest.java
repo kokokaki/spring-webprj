@@ -1,12 +1,14 @@
 package com.myapp.webprj.board.mapper;
 
 import com.myapp.webprj.board.domain.Board;
+import com.myapp.webprj.board.service.BoardService;
 import com.myapp.webprj.common.Criteria;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +19,9 @@ class BoardMapperTest {
 
     @Autowired
     private BoardMapper mapper;
+
+    @Autowired
+    private BoardService service;
 
     @Test
     @DisplayName("데이터베이스에서 게시글 전체를 조회할 수 있어야 한다.")
@@ -135,6 +140,19 @@ class BoardMapperTest {
         for (Board board : list) {
             System.out.println(board);
         }
+    }
+
+    @Test
+    @DisplayName("파일 첨부 기능 테스트")
+    void addFileTest() {
+
+        Board board = new Board();
+        board.setWriter("테스트쟁이");
+        board.setTitle("메롱메롱");
+        board.setContent("hahahohohoho~~");
+        board.setFileNames(Arrays.asList("dog.jpg", "cat.jpg"));
+
+        service.register(board);
     }
 
 }

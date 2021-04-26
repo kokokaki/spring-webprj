@@ -7,12 +7,11 @@ import com.myapp.webprj.common.PageMaker;
 import com.myapp.webprj.reply.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -62,6 +61,18 @@ public class BoardController {
         model.addAttribute("board", board);
 //        model.addAttribute("pageInfo", cri);
         return "board/get";
+    }
+
+    //게시글 상세 조회시 첨부파일명들을 불러오는 비동기 요청
+    @GetMapping("/file/{bno}")
+    @ResponseBody
+    public ResponseEntity<List<String>> getFiles(@PathVariable Long bno) {
+        try {
+            List<String> fileNames = boardService.getFileNames(bno);
+            return new ResponseEntity<>(fileNames, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     //게시글 수정 화면 요청

@@ -143,6 +143,13 @@
         VALUES (#{fileName}, SEQ_FREE_BOARD.currval)
     </insert>
 
+    <!--  파일명 조회  -->
+    <select id="findFileNames" resultType="String">
+        SELECT file_name
+        FROM file_upload
+        WHERE bno = #{bno}
+    </select>
+
 
     <update id="update">
         UPDATE tbl_free_board

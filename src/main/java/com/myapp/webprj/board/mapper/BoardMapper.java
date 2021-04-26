@@ -30,6 +30,9 @@ public interface BoardMapper {
     //글 상세 조회
     Board findByBno(Long bno);
 
+    //글 상세 조회 시 첨부파일명들 조회
+    List<String> findFileNames(Long bno);
+
     //글 쓰기 기능
     void save(Board board);
 

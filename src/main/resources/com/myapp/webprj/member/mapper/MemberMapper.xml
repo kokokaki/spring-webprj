@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myapp.webprj.member.mapper.MemberMapper">
+
+    <!--  1. 회원 가입기능  -->
+    <insert id="register">
+        INSERT INTO member (account, password, name, email, auth)
+        VALUES (#{account}, #{password}, #{name}, #{email}, #{auth})
+    </insert>
+
+    <resultMap id="UserMap" type="com.myapp.webprj.member.domain.Member">
+        <result property="regDate" column="reg_date" />
+    </resultMap>
+
+    <!--  2.  회원 정보 조회 -->
+    <select id="getUserInfo" resultMap="UserMap">
+        SELECT *
+        FROM member
+        WHERE account = #{account}
+    </select>
+
+    <!--  3. 아이디 이메일 중복체크  -->
+    <select id="isDuplicate" resultType="int" parameterType="hashmap">
+        SELECT COUNT(*)
+        FROM member
+        <if test="kind == 'account'">
+            WHERE account = #{info}
+        </if>
+        <if test="kind == 'email'">
+            WHERE email = #{info}
+        </if>
+    </select>
+
+</mapper>

@@ -21,4 +21,5 @@ public class Board {
 
     //첨부파일들의 이름목록을 저장할 필드
     private List<String> fileNames;
+
 }

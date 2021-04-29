@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequiredArgsConstructor
 @Log4j2
@@ -52,7 +54,7 @@ public class MemberController {
 
     //로그인 수행 요청 처리
     @PostMapping("/loginCheck")
-    public String loginCheck(Member inputUser, Model model) {
+    public String loginCheck(Member inputUser, Model model, HttpSession session) {
         log.info("/loginCheck POST : " + inputUser);
 
         //회원가입이 되었는지 알아보기 위해 로그인 시도 아이디를 통해
@@ -65,7 +67,28 @@ public class MemberController {
 
         model.addAttribute("result", result);
 
+        if (result.equals("loginSuccess")) {
+            //로그인 성공 처리
+            //세션에 로그인한 유저정보를 기록
+            session.setAttribute("loginUser", dbUser);
+            return "redirect:/board/list";
+        }
         return "member/login-result";
+    }
+
+    //로그아웃 요청 처리
+    @GetMapping("/member/logout")
+    public String logout(HttpSession session) {
+        log.info("/member/logout GET ! ");
+
+        Member loginUser = (Member) session.getAttribute("loginUser");
+
+        if (loginUser != null) {
+            //로그인을 한 사람은 세션을 무효화(전체 데이터 삭제)
+            session.invalidate();
+            return "redirect:/board/list";
+        }
+        return "redirect:/member/login";
     }
 
 }

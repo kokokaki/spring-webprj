@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Writer</label> <input class="form-control" name='writer'>
+                        <label>Writer</label> <input class="form-control" name='writer' readonly value="${loginUser.name}">
                     </div>
 
                     <!-- 첨부파일 드래그 앤 드롭 영역 -->

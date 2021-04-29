@@ -56,15 +56,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Writer</label> <input class="form-control" name='writer' value="${board.writer }" readonly>
+                    <label>Writer</label> <input class="form-control" name='writer' value="${board.writer}" readonly>
                 </div>
 
                 <div class="form-group">
                     <ul class="uploaded-list"></ul>
                 </div>
 
+                <c:if test="${loginUser.name == board.writer || loginUser.auth == 'ADMIN'}">
+                    <button id='modify-btn' class="btn btn-default">수정</button>
+                </c:if>
 
-                <button id='modify-btn' class="btn btn-default">수정</button>
                 <button id='list-btn' class="btn btn-info">목록</button>
 
             </div>
@@ -85,7 +87,10 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-comments fa-fw"></i> 댓글 (<span class="replyCnt"></span>)
-                <button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>댓글 등록</button>
+
+                <c:if test="${loginUser != null}">
+                    <button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>댓글 등록</button>
+                </c:if>
             </div>
 
             <!-- /.panel-heading -->

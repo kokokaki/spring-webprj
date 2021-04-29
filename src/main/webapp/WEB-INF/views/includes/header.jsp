@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -255,15 +257,30 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>
-                    </ul>
+
+                    <c:if test="${loginUser == null}">
+                        <ul class="dropdown-menu dropdown-user">
+                            
+                            <li><a href="/member/login"><i class="fa fa-gear fa-fw"></i> Login</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="/member/sign-up"><i class="fa fa-sign-out fa-fw"></i> Sign-Up</a>
+                            </li>
+                        </ul>
+                    </c:if>
+
+                    <c:if test="${loginUser != null}">
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#"><i class="fa fa-user fa-fw"></i> ${loginUser.name} Profile</a>
+                            </li>
+                            <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="/member/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            </li>
+                        </ul>
+                    </c:if>
+
                     <!-- /.dropdown-user -->
                 </li>
                 <!-- /.dropdown -->

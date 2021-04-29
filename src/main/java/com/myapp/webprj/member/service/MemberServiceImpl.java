@@ -46,4 +46,19 @@ public class MemberServiceImpl implements MemberService {
     public Member getUser(String account) {
         return memberMapper.getUserInfo(account);
     }
+
+    @Override
+    public String login(Member inputData, Member dbData) {
+
+        if (dbData != null) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            if (encoder.matches(inputData.getPassword(), dbData.getPassword())) {
+                return "loginSuccess";
+            } else {
+                return "pwFail";
+            }
+        } else {
+            return "idFail";
+        }
+    }
 }
